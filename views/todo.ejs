@@ -1,111 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Todo List APP test</title>
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Todo List App</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #333;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 17px;
+            opacity: 0.9;
+        }
+
+        .jenkins-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 7px 15px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Main Card */
+        .todo-card {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Add Todo */
+        .add-section {
+            margin-bottom: 30px;
+        }
+
+        .add-section label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+        }
+
+        input[type="submit"] {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+        }
+
+        /* Todo Header */
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .todo-header h2 {
+            font-size: 22px;
+            color: #222;
+        }
+
+        .count {
+            background: #eef2ff;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Todo List */
+        ul {
+            list-style: none;
+        }
+
+        ul li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f9fc;
+            border: 1px solid #e8eaf0;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            transition: 0.25s;
+        }
+
+        ul li:hover {
+            transform: translateX(4px);
+            border-color: #c7cdfc;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .todo-number {
+            min-width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 17px;
+            transition: 0.25s;
+        }
+
+        .edit-btn {
+            background: #fff7e0;
+            color: #d89b00;
+        }
+
+        .edit-btn:hover {
+            background: #ffc107;
+            color: white;
+            transform: scale(1.08);
+        }
+
+        .delete-btn {
+            background: #fff0f0;
+            color: #e53935;
+        }
+
+        .delete-btn:hover {
+            background: #e53935;
+            color: white;
+            transform: scale(1.08);
+        }
+
+        /* Empty state */
+        .empty {
+            text-align: center;
+            padding: 35px 10px;
+            color: #888;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            font-size: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 25px;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+
             body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                color: #333;
-                margin: 0;
-                padding: 0;
+                padding: 25px 12px;
             }
 
-            h1 {
-                background-color: #4CAF50;
-                color: white;
-                margin: 0;
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .todo-card {
                 padding: 20px;
-                text-align: center;
+                border-radius: 16px;
             }
 
-            ul {
-                list-style: none;
-                padding: 0;
-            }
-
-            ul li {
-                background: #fff;
-                border: 1px solid #ddd;
-                margin-bottom: 10px;
-                padding: 10px;
-                position: relative;
-            }
-
-            ul li a {
-                color: #333;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-            ul li a:hover {
-                color: #4CAF50;
-            }
-
-            .delete-btn {
-                color: red;
-                position: absolute;
-                right: 10px;
-                top: 10px;
-            }
-
-            .edit-btn {
-                color: #FFC107;
-                position: absolute;
-                right: 40px;
-                top: 10px;
-            }
-
-            form {
-                background: #fff;
-                padding: 20px;
-                margin-top: 20px;
-            }
-
-            label {
-                display: block;
-                margin-bottom: 10px;
-            }
-
-            input[type="text"] {
-                width: 100%;
-                padding: 10px;
-                margin-bottom: 10px;
-                border: 1px solid #ddd;
+            .form-row {
+                flex-direction: column;
             }
 
             input[type="submit"] {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                cursor: pointer;
+                width: 100%;
             }
 
-            input[type="submit"]:hover {
-                background-color: #45a049;
+            ul li {
+                padding: 13px;
             }
-        </style>
-    </head>
 
-    <body>
-        <h1>Hello Junoon Batch 8 (Jenkins), Write your plan on Learning Jenkins</h1>
-        <ul>
-            <% todolist.forEach(function(todo, index) { %>
-            <li>
-                <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
-                <a href="/todo/<%= index %>" class="edit-btn">✎</a>
-                <%- todo %>
-            </li>
-            <% }); %>
-        </ul>
+            .todo-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
 
-        <form action="/todo/add/" method="post">
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>📝 Todo List</h1>
+
             <p>
-                <label for="newtodo">What should I do?</label>
-                <input type="text" name="newtodo" id="newtodo" autofocus />
-                <input type="submit" value="Add" />
+                Plan your work. Track your tasks. Get things done.
             </p>
-        </form>
-    </body>
+
+            <div class="jenkins-badge">
+                🚀 Powered by Jenkins CI/CD
+            </div>
+        </div>
+
+
+        <!-- Main Card -->
+        <div class="todo-card">
+
+            <!-- Add Todo -->
+            <div class="add-section">
+
+                <label for="newtodo">
+                    What should I do today?
+                </label>
+
+                <form action="/todo/add/" method="post">
+
+                    <div class="form-row">
+
+                        <input
+                            type="text"
+                            name="newtodo"
+                            id="newtodo"
+                            placeholder="Enter a new task..."
+                            autofocus
+                            required
+                        />
+
+                        <input
+                            type="submit"
+                            value="➕ Add Task"
+                        />
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- Todo Header -->
+            <div class="todo-header">
+
+                <h2>📋 My Tasks</h2>
+
+                <span class="count">
+                    <%= todolist.length %> Tasks
+                </span>
+
+            </div>
+
+
+            <!-- Todo List -->
+            <ul>
+
+                <% if (todolist.length === 0) { %>
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            📭
+                        </div>
+
+                        <p>
+                            No tasks yet. Add your first task above!
+                        </p>
+
+                    </div>
+
+                <% } %>
+
+
+                <% todolist.forEach(function(todo, index) { %>
+
+                    <li>
+
+                        <div class="todo-number">
+                            <%= index + 1 %>
+                        </div>
+
+                        <div class="todo-text">
+                            <%- todo %>
+                        </div>
+
+                        <div class="actions">
+
+                            <a
+                                href="/todo/<%= index %>"
+                                class="edit-btn"
+                                title="Edit Task"
+                            >
+                                ✏️
+                            </a>
+
+                            <a
+                                href="/todo/delete/<%= index %>"
+                                class="delete-btn"
+                                title="Delete Task"
+                            >
+                                🗑️
+                            </a>
+
+                        </div>
+
+                    </li>
+
+                <% }); %>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="footer">
+            Todo List App • Built with Node.js & Jenkins 🚀
+        </div>
+
+    </div>
+
+</body>
 </html>
